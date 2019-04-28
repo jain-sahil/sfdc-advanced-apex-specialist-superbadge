@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Inventory_Level_Low</fullName>
+        <categories>constants</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Inventory Level Low</shortDescription>
+        <value>Has a low inventory</value>
+    </labels>
+    <labels>
+        <fullName>Select_One</fullName>
+        <categories>constants</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Select One</shortDescription>
+        <value>Select One</value>
+    </labels>
+</CustomLabels>
