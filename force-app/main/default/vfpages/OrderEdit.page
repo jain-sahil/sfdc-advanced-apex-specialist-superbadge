@@ -1,0 +1,80 @@
+<apex:page standardController="Order" extensions="OrderExtension" >
+    <apex:sectionHeader title="{!$ObjectType.Order.Label} Edit" subtitle="{!IF(Order.Id == null,'New '+$ObjectType.Order.Label,Order.Name)}" />
+    <apex:form id="form" >
+        <apex:pageMessages id="pageMessages" />
+        <apex:pageBlock title="Order Details" mode="Edit">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}" />
+                <apex:commandButton value="Cancel" action="{!cancel}" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection >
+                <apex:inputField value="{!orderRecord.AccountId}" required="true" />
+                <apex:inputField value="{!orderRecord.Name}" />
+                <apex:inputField value="{!orderRecord.EffectiveDate}" />
+                <apex:inputField value="{!orderRecord.Status}" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:actionRegion >
+            <apex:pageBlock title="Summary" id="summary" >
+                <apex:pageBlockSection columns="2" >
+                    <apex:pageMessage severity="Info" summary="No Products have been selected" rendered="{!pieData == null}" />
+                    <apex:outputPanel rendered="{!pieData != null}" >
+                        <apex:chart height="250" width="350" data="{!pieData}" >
+                            <apex:pieSeries dataField="val" labelField="name"/>
+                            <apex:legend position="right"/>
+                        </apex:chart>
+                    </apex:outputPanel>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Order.Fields.TotalAmount.label}" />
+                        <apex:outputText value="{0,number,$0.00}" id="total" ><apex:param value="{!total}" /></apex:outputText>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+            <apex:pageBlock title="{!$ObjectType.Product2.Label}" id="orderItemTable" >
+                <apex:pageBlockSection >
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Product2.Fields.Family.label}" />
+                        <apex:selectList value="{!selectedFamily}" size="1" >
+                            <apex:selectOptions value="{!familyOptions}" />
+                            <apex:actionSupport action="{!selectFamily}" event="onchange" reRender="pageMessages, pagination, orderItemTable" />
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <apex:pageBlockTable value="{!orderItemList}" var="o" >
+                    <apex:column headerValue="Qty">
+                        <apex:inputField value="{!o.Quantity}" >
+                            <apex:actionSupport event="onchange" action="{!onFieldChange}" reRender="pageMessages, summary" />
+                        </apex:inputField>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Product2.Fields.Family.label}">
+                        <apex:outputField value="{!o.Product2.Family}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.OrderItem.Fields.Product2Id.label}" >
+                        <apex:outputField value="{!o.Product2Id}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.OrderItem.Fields.UnitPrice.label}">
+                        <apex:inputField value="{!o.UnitPrice}" >
+                            <apex:actionSupport event="onchange" action="{!onFieldChange}" reRender="pageMessages, summary" />
+                        </apex:inputField>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Product2.Fields.Quantity_Remaining__c.label}" >
+                        <apex:outputField value="{!o.Product2.Quantity_Remaining__c}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <center>
+                <apex:panelGrid id="pagination" columns="9" >
+                <apex:commandButton value="<< First" disabled="{!hasPrevious==false}" action="{!first}" reRender="pageMessages, pagination, orderItemTable" />
+                <span>&nbsp;&nbsp;</span>
+                <apex:commandButton value="< Previous" disabled="{!hasPrevious==false}" action="{!previous}" reRender="pageMessages, pagination, orderItemTable" />
+                <span>&nbsp;&nbsp;</span>
+                <span>Page {!pageNumber} of {!totalPages}</span>
+                <span>&nbsp;&nbsp;</span>
+                <apex:commandButton value="Next >" disabled="{!hasNext==false}" action="{!next}" reRender="pageMessages, pagination, orderItemTable" />
+                <span>&nbsp;&nbsp;</span>
+                <apex:commandButton value="Last >>" disabled="{!hasNext==false}" action="{!last}" reRender="pageMessages, pagination, orderItemTable" />
+                </apex:panelGrid>
+            </center>
+        </apex:actionRegion>
+    </apex:form>
+</apex:page>
