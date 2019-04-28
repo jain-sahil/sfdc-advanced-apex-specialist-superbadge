@@ -1,4 +1,4 @@
-<apex:page standardController="Order" extensions="OrderExtension" >
+<apex:page standardController="Order" extensions="OrderExtension">
     <apex:sectionHeader title="{!$ObjectType.Order.Label} Edit" subtitle="{!IF(Order.Id == null,'New '+$ObjectType.Order.Label,Order.Name)}" />
     <apex:form id="form" >
         <apex:pageMessages id="pageMessages" />
